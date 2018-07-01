@@ -21,7 +21,7 @@ s = serial(SerialPort);
 fopen(s);
 
 
-
+%hello world
 time =now;
 voltage = 0;
 %% Set up the figure 
