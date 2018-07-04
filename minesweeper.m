@@ -46,10 +46,10 @@ while ishandle(plotGraph) %Loop when Plot is Active will run until plot is close
          
          recived=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
          
-         yangle=recieved(1:3);
-         zangle=recieved(4:6);
-         encoder=reciveed(7:9);
-         minestate=recieved(10);
+         yangle=str2double(recieved(1:3));
+         zangle=str2double(recieved(4:6));
+         encoder=str2double(reciveed(7:9));
+         minestate=str2double(recieved(10));
          
 % dont know the importance of this chunk of code
 %          dat = ; %Data from the arduino
@@ -66,8 +66,11 @@ while ishandle(plotGraph) %Loop when Plot is Active will run until plot is close
          %seconds per sample!
 %----------------------------------------------------------------------
 %to-do  the logic that will make sence of the data
+% some values (like encoder) may need pre processing
+    robXpos=cos(zangle)*encoder * cos(yangle);
+    robYpos=cos(zangle)*encoder * sin(yangle);
 
-
+    
 
 %----------------------------------------------------------------------
          set(plotGraph,'XData',time,'YData',data);
