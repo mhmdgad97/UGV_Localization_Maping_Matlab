@@ -8,9 +8,9 @@ fopen(s);
 plotTitle = 'Mine sweeper map';  % plot title
 xLabel = 'X axcis';     % x-axis label
 yLabel = 'Y axais';      % y-axis label
-legend1 = 'Robot'
-legend2 = 'Under Mine'
-legend3 = 'Upper mine'
+legend1 = 'Robot';
+legend2 = 'Under Mine';
+legend3 = 'Upper mine';
 %%i cannot tell the difference
 yMax  = 2000   ;                 %y Maximum Value (CM)
 yMin  = 0       ;                %y minimum Value (CM)
@@ -28,10 +28,10 @@ data2 = 0;
 count = 0;
 recived =0;
 %Set up Plot
-plotGraph = plot(time,data,'-r' )  % every AnalogRead needs to be on its own Plotgraph
+robot = plot(time,data,'dr' )  % every AnalogRead needs to be on its own Plotgraph
 hold on                            %hold on makes sure all of the channels are plotted
-plotGraph1 = plot(time,data1,'-b')
-plotGraph2 = plot(time, data2,'-g' )
+uppermines = plot(time,data1,'og')
+lowermines = plot(time, data2,'+b' )
 
 title(plotTitle,'FontSize',15);
 xlabel(xLabel,'FontSize',15);
@@ -42,7 +42,7 @@ axis([yMin yMax min max]);
 grid(plotGrid);
 tic
 
-while ishandle(plotGraph) %Loop when Plot is Active will run until plot is closed (dont know the function use)
+while ishandle(robot) %Loop when Plot is Active will run until plot is closed (dont know the function use)
          
          recived=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
          
@@ -70,12 +70,43 @@ while ishandle(plotGraph) %Loop when Plot is Active will run until plot is close
     robXpos=cos(zangle)*encoder * cos(yangle);
     robYpos=cos(zangle)*encoder * sin(yangle);
 
+    coilXpos=50;%the absolute postion of the coil relative to the centre of the robot
+    coilYpos=50;
     
+    switch minestate
+        case 1 % the mine is up and on the right
+            
+            UmineXpos = robXpos + coilXpos;
+            UmineYpos = robXpos - coilYpos;
+            
+      % break;
+        
+        case 2 %  the mine is up and on the left
+            
+            UmineXpos = robXpos - coilXpos;
+            UmineYpos = robXpos - coilYpos;
+            
+      %  break;
+        
+        case 3 % the mine is down and on the right
+            
+             DmineXpos = robXpos + coilXpos;
+             DmineYpos = robXpos - coilYpos;
+            
+      % break;
+        
+        case 4 % the mine is down and on the left
+            
+             DmineXpos = robXpos - coilXpos;
+             DmineYpos = robXpos - coilYpos;
+            
+      % break;
+    end
 
 %----------------------------------------------------------------------
-         set(plotGraph,'XData',time,'YData',data);
-         set(plotGraph1,'XData',time,'YData',data1);
-         set(plotGraph2,'XData',time,'YData',data2);
+         set(robot,'XData',robXpos,'YData',robYpos);
+         set(uppermines,'XData',UmineXpos,'YData',UmineYpos);
+         set(lowermines,'XData',DmineXpos,'YData',DmineYpos);
           axis([0 time(count) min max]);
           %Update the graph
           pause(delay);
