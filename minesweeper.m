@@ -3,7 +3,7 @@ clc
 %User Defined Properties 
 SerialPort='com6'; %serial port
 s = serial(SerialPort);
-set(s,'BaudRate',4800); % to be known from arduino
+set(s,'BaudRate',115200); % to be known from arduino
 fopen(s);
 plotTitle = 'Mine sweeper map';  % plot title
 xLabel = 'X axcis';     % x-axis label
@@ -11,12 +11,13 @@ yLabel = 'Y axais';      % y-axis label
 legend1 = 'Robot';
 legend2 = 'Under Mine';
 legend3 = 'Upper mine';
+
 %%i cannot tell the difference
-yMax  = 2000   ;                 %y Maximum Value (CM)
-yMin  = 0       ;                %y minimum Value (CM)
+yMax  = 2000   ;                 %y Maximum Value (cm)
+yMin  = 0       ;                %y minimum Value (cm)
 plotGrid = 'on';                 % 'off' to turn off grid
-min = 0;                         % set y-min (CM)
-max = 2000;                      % set y-max (CM)
+min = 0;                         % set y-min (cm)
+max = 2000;                      % set y-max (cm)
 %%
 delay = .01;      % make sure sample faster than resolution (connot understand what he means)
 %Define Function Variables
