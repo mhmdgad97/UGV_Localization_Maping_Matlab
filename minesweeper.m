@@ -22,7 +22,7 @@ max = 2000;                      % set y-max (cm)
 %delay = .01;      % make sure sample faster than resolution (connot understand what he means)
 %Define Function Variables
 
-%time = 0; %we don't need time in our plots don't copy the code then work in it. but use it to help you with your owen folw and logic
+
 data = 0; 
 data1 = 0;
 data2 = 0;
@@ -41,7 +41,7 @@ legend(legend1,legend2,legend3)
 axis([yMin yMax min max]);
 
 grid(plotGrid);
-%tic %no need for time so no need for tic toc
+
 
 while ishandle(robot) %Loop when Plot is Active will run until plot is closed (dont know the function use)
                         %look at documentation : Description: ishandle(H) returns an array whose elements are 1 where the elements of H are graphics or Java® object handles, 
@@ -52,15 +52,6 @@ while ishandle(robot) %Loop when Plot is Active will run until plot is closed (d
          encoder=str2double(reciveed(7:9));
          minestate=str2double(recieved(10));
          
-% dont know the importance of this chunk of code
-%          dat = ; %Data from the arduino
-%          dat1 = ; 
-%          dat2 = ;       
-%          count = count + 1;    
-%          time(count) = toc;    
-%          data(count) = dat(1);         
-%          data1(count) = dat1(1)
-%          data2(count) = dat2(1)
 
          %This is the magic code 
          %Using plot will slow down the sampling time.. At times to over 20
@@ -69,8 +60,8 @@ while ishandle(robot) %Loop when Plot is Active will run until plot is closed (d
 %to-do  the logic that will make sence of the data
 % some values (like encoder) may need pre processing
 %plese declare the robot posetion as a vector (ex:robpos[2 1])
-    robXpos=cos(zangle)*encoder * cos(yangle);
-    robYpos=cos(zangle)*encoder * sin(yangle);
+    robXpos=robXpos+cos(zangle)*encoder * cos(yangle);
+    robYpos=robYpos + cos(zangle)*encoder * sin(yangle);
 
     coilXpos=50;%the absolute postion of the coil relative to the centre of the robot
     coilYpos=50;
