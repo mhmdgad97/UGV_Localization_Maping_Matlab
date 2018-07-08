@@ -20,18 +20,19 @@ coilpos=zeros(1,2);%the absolute postion of the coil relative to the centre of t
 robpos=zeros(1,2);% robot postion
 
 Umines=zeros(1000000,2);%pre allocation
-U=0;% upper mine index
+U=1;% upper mine index
 Dmines=zeros(1000000,2);%pre allocation
-D=0;%down mine index
+D=1;%down mine index
 
 %% plot variables and functions 
 % RESPONSIBLE FOR THE DOMAIN OF PLOT
+encoderratio=1; %value vor tuning the reading sent by encoder
 
-yMax  = 2000   ;                 %y Maximum Value (cm)
-yMin  = 0       ;                %y minimum Value (cm)
+yMax  = 1100;                 %y Maximum Value (cm)
+yMin  = -100;                %y minimum Value (cm)
 plotGrid = 'on';                 % 'off' to turn off grid
-min = 0;                         % set y-min (cm)
-max = 2000;                      % set y-max (cm)
+min = -100;                         % set x-min (cm)
+max = 1100;                      % set x-max (cm)
 
 plotTitle = 'Mine sweeper map';  % plot title
 xLabel = 'X axis';     % x-axis label
@@ -49,8 +50,8 @@ grid(plotGrid);
 
 robot = plot(robpos(1,1),robpos(1,2),'dr' );  % every AnalogRead needs to be on its own Plotgraph
 hold on                            %hold on makes sure all of the channels are plotted
-uppermines = plot(Umines(U,1),Umines(U,2),'og');
-lowermines = plot(Dmines(D,1),Dmines(D,2),'+b' );
+uppermines = plot(Umines(:,1),Umines(:,2),'og');
+lowermines = plot(Dmines(:,1),Dmines(:,2),'+b' );
 %%
 
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
@@ -68,47 +69,49 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 % some values (like encoder) may need pre processing
 %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
 
- robpos(1,1)=robpos(1,1)+ cos(zangle)*encoder * cos(yangle);
- robpos(1,2)=robpos(1,2)+ cos(zangle)*encoder * sin(yangle);
+ robpos(1,1)=robpos(1,1)+ cos(zangle)*encoder* cos(yangle)*encoderratio;
+ robpos(1,2)=robpos(1,2)+ cos(zangle)*encoder * sin(yangle)*encoderratio;
 
 %--------all the next code needs modification because you didn't consider the orientation of the robot /(took into consedration) 
 switch minestate
     
         case 1 % the mine is up and on the right
             
-            Umines(U,1) = robpos(1,1) + coilpos(1,1);
-            Umines(U,2) = robpos(1,2) - coilpos(1,2);
+            Umines(U,1) = robpos(1,1) + coilpos(1,1)*cos(yangle);
+            Umines(U,2) = robpos(1,2) + coilpos(1,2)*sin(yangle);
             U=U+1;
             
       % break;
         
         case 2 %  the mine is up and on the left
             
-            Umines(U,1) = robpos(1,1) - coilpos(1,1);
-            Umines(U,2) = robpos(1,1) - coilpos(1,2);
+            Umines(U,1) = robpos(1,1) - coilpos(1,1)*cos(yangle);
+            Umines(U,2) = robpos(1,2) - coilpos(1,2)*sin(yangle);
             U=U+1;
       %  break;
         
         case 3 % the mine is down and on the right
             
-             Dmines(U,1) = robpos(1,1) + coilpos(1,1);
-             Dmines(U,2) = robpos(1,1) - coilpos(1,2);
-             U=U+1;
+             Dmines(U,1) = robpos(1,1) + coilpos(1,1)*cos(yangle);
+             Dmines(U,2) = robpos(1,2) + coilpos(1,2)*sin(yangle);
+             D=D+1;
       % break;
         
         case 4 % the mine is down and on the left
             
-             Dmines(U,1) = robpos(1,1) - coilpos(1,1);
-             Dmines(U,2) = robpos(1,1) - coilpos(1,2);
-             U=U+1;   
+             Dmines(U,1) = robpos(1,1) - coilpos(1,1)*cos(yangle);
+             Dmines(U,2) = robpos(1,2) - coilpos(1,2)*sin(yangle);
+             D=D+1;   
       % break;
 end
 %--------------------------------------------------------------
 
 
          set(robot,'XData',robpos(1,1),'YData',robpos(1,2));
-         set(uppermines,'XData',Umines(U,1),'YData',Umines(U,2));
-         set(lowermines,'XData',Dmines(U,1),'YData',Dmines(U,2));
+         refreshdata(uppermines);
+         refreshdata(lowermines);
+         %set(uppermines,'XData',Umines(U,1),'YData',Umines(U,2));
+         %set(lowermines,'XData',Dmines(U,1),'YData',Dmines(U,2));
          %% considered
          %then after you loop once all the data is bye bye overwritten by
          %the new data. you didn't save mines posetions you only plot them
@@ -120,8 +123,8 @@ end
          % try to declare all your variables at the beginning of the code
          %%
           %Update the graph
-          pause(delay);
+          %pause(delay); %no need for this in our code we have enough
+          %waiting inside the code
 end
-delete(a);
 disp('Plot Closed and arduino object has been deleted');
 
