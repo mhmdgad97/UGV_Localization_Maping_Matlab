@@ -2,17 +2,17 @@ clear
 clc
 
 %User Defined Properties 
-SerialPort='com6'; %serial port
+SerialPort='com5'; %serial port
 s = serial(SerialPort);
 set(s,'BaudRate',115200); % to be known from arduino
 fopen(s);
-recived=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
+recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
 
 %%
 %postion defined variables(get more specific info from 3agmy) 
 yangle=str2double(recieved(1:3));%pre allocation
 zangle=str2double(recieved(4:6));
-encoder=str2double(reciveed(7:9));
+encoder=str2double(recieved(7:9));
 minestate=str2double(recieved(10));
 
 coilpos=zeros(1,2);%the absolute postion of the coil relative to the centre of the robot
@@ -58,7 +58,7 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 
      yangle=str2double(recieved(1:3));%changing the values every loop
      zangle=str2double(recieved(4:6));
-     encoder=str2double(reciveed(7:9));
+     encoder=str2double(recieved(7:9));
      minestate=str2double(recieved(10));
 
          %This is the magic code 
