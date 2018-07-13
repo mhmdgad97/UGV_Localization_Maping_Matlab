@@ -4,33 +4,23 @@ clc
 %User Defined Properties 
 SerialPort='com5'; %serial port
 s = serial(SerialPort);
-set(s,'BaudRate',115200); % to be known from arduino
+set(s,'BaudRate',9600); % to be known from arduino
 fopen(s);
-recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
-
 %%
 %postion defined variables(get more specific info from 3agmy) 
-yangle=str2double(recieved(1:3));%pre allocation
-zangle=str2double(recieved(4:6));
-encoder=str2double(recieved(7:9));
-minestate=str2double(recieved(10));
+coilpos=[50 50];%the absolute postion of the coil relative to the centre of the robot
+robpos=[50 50];% robot inetial postion
 
-coilpos=zeros(1,2);%the absolute postion of the coil relative to the centre of the robot
-
-robpos=zeros(1,2);% robot postion
-
-Umines=zeros(1000000,2);%pre allocation
+Umines=zeros(1000,2);%pre allocation
 U=1;% upper mine index
-Dmines=zeros(1000000,2);%pre allocation
+Dmines=zeros(1000,2);%pre allocation
 D=1;%down mine index
+encoderratio=1; %value vor tuning the reading sent by encoder
 
 %% plot variables and functions 
 % RESPONSIBLE FOR THE DOMAIN OF PLOT
-encoderratio=1; %value vor tuning the reading sent by encoder
-
 yMax  = 1100;                 %y Maximum Value (cm)
 yMin  = -100;                %y minimum Value (cm)
-plotGrid = 'on';                 % 'off' to turn off grid
 min = -100;                         % set x-min (cm)
 max = 1100;                      % set x-max (cm)
 
@@ -41,21 +31,25 @@ legend1 = 'Robot';
 legend2 = 'Under Mine';
 legend3 = 'Upper mine';
 
+
+robot = plot(robpos(1,1),robpos(1,2),'o');  % every AnalogRead needs to be on its own Plotgraph
+hold on;
+uppermines = scatter(Umines(:,1),Umines(:,2),'og');
+lowermines = scatter(Dmines(:,1),Dmines(:,2),'+b' );
+
 title(plotTitle,'FontSize',15);
 xlabel(xLabel,'FontSize',15);
 ylabel(yLabel,'FontSize',15);
 legend(legend1,legend2,legend3)
 axis([yMin yMax min max]);
-grid(plotGrid);
+grid('on');
 
-robot = plot(robpos(1,1),robpos(1,2),'dr' );  % every AnalogRead needs to be on its own Plotgraph
-hold on                            %hold on makes sure all of the channels are plotted
-uppermines = plot(Umines(:,1),Umines(:,2),'og');
-lowermines = plot(Dmines(:,1),Dmines(:,2),'+b' );
+drawnow
 %%
-
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
-
+     recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
+     
+     
      yangle=str2double(recieved(1:3));%changing the values every loop
      zangle=str2double(recieved(4:6));
      encoder=str2double(recieved(7:9));
@@ -69,8 +63,8 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 % some values (like encoder) may need pre processing
 %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
 
- robpos(1,1)=robpos(1,1)+ cos(zangle)*encoder* cos(yangle)*encoderratio;
- robpos(1,2)=robpos(1,2)+ cos(zangle)*encoder * sin(yangle)*encoderratio;
+ robpos(1,1)=robpos(1,1)+ cosd(zangle)*encoder* cosd(yangle)*encoderratio;
+ robpos(1,2)=robpos(1,2)+ cosd(zangle)*encoder * sind(yangle)*encoderratio;
 
 %--------all the next code needs modification because you didn't consider the orientation of the robot /(took into consedration) 
 switch minestate
@@ -105,13 +99,12 @@ switch minestate
       % break;
 end
 %--------------------------------------------------------------
-
-
          set(robot,'XData',robpos(1,1),'YData',robpos(1,2));
-         refreshdata(uppermines);
-         refreshdata(lowermines);
-         %set(uppermines,'XData',Umines(U,1),'YData',Umines(U,2));
-         %set(lowermines,'XData',Dmines(U,1),'YData',Dmines(U,2));
+         %refreshdata(uppermines);
+         %refreshdata(lowermines);
+         set(uppermines,'XData',Umines(:,1),'YData',Umines(:,2));
+         set(lowermines,'XData',Dmines(:,1),'YData',Dmines(:,2));
+         drawnow limitrate
          %% considered
          %then after you loop once all the data is bye bye overwritten by
          %the new data. you didn't save mines posetions you only plot them
@@ -126,5 +119,6 @@ end
           %pause(delay); %no need for this in our code we have enough
           %waiting inside the code
 end
+delete(s);
 disp('Plot Closed and arduino object has been deleted');
 
