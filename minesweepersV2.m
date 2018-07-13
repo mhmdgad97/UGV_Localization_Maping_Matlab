@@ -2,7 +2,7 @@ clear
 clc
 
 %User Defined Properties 
-SerialPort='com5'; %serial port
+SerialPort='com8'; %serial port
 s = serial(SerialPort);
 set(s,'BaudRate',9600); % to be known from arduino
 fopen(s);
