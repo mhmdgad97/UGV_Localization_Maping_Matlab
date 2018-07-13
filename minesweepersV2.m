@@ -1,4 +1,4 @@
-clear
+clear all
 clc
 
 %User Defined Properties 
@@ -19,10 +19,11 @@ encoderratio=1; %value vor tuning the reading sent by encoder
 
 %% plot variables and functions 
 % RESPONSIBLE FOR THE DOMAIN OF PLOT
-yMax  = 1100;                 %y Maximum Value (cm)
+% the dimension of the map 20m by 20m
+yMax  = 2100;                 %y Maximum Value (cm)
 yMin  = -100;                %y minimum Value (cm)
 min = -100;                         % set x-min (cm)
-max = 1100;                      % set x-max (cm)
+max = 2100;                      % set x-max (cm)
 
 plotTitle = 'Mine sweeper map';  % plot title
 xLabel = 'X axis';     % x-axis label
@@ -49,7 +50,7 @@ drawnow
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
      recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
      
-     
+   
      yangle=str2double(recieved(1:3));%changing the values every loop
      zangle=str2double(recieved(4:6));
      encoder=str2double(recieved(7:9));
@@ -63,8 +64,8 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 % some values (like encoder) may need pre processing
 %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
 
- robpos(1,1)=robpos(1,1)+ cosd(zangle)*encoder* cosd(yangle)*encoderratio;
- robpos(1,2)=robpos(1,2)+ cosd(zangle)*encoder * sind(yangle)*encoderratio;
+ robpos(1,1)=robpos(1,1)+ cosd(zangle)*encoder* sind(yangle)*encoderratio;
+ robpos(1,2)=robpos(1,2)+ cosd(zangle)*encoder *cosd(yangle)*encoderratio;
 
 %--------all the next code needs modification because you didn't consider the orientation of the robot /(took into consedration) 
 switch minestate
