@@ -20,17 +20,17 @@ void loop() {
   delay(1000);
 
 //turn right and go straigt
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
-      Serial.println("0900001001");
+      Serial.println("2700001001");
   delay(1000); 
 
   // //turn right and go straigt
@@ -49,17 +49,17 @@ void loop() {
 
    
 //turn right and go straigt
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
-      Serial.println("2700001001");
+      Serial.println("0900001001");
   delay(1000); 
 
      

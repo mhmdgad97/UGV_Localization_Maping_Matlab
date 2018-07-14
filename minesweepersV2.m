@@ -8,22 +8,27 @@ set(s,'BaudRate',9600); % to be known from arduino
 fopen(s);
 %%
 %postion defined variables(get more specific info from 3agmy) 
-coilpos=[50 50];%the absolute postion of the coil relative to the centre of the robot
-robpos=[50 50];% robot inetial postion
+coilpos=[50 10];%the absolute postion of the coil relative to the centre of the robot
+robpos=[0 0];% robot inetial postion
 
-Umines=zeros(1000,2);%pre allocation
+L = (coilpos(1,1)^2 + coilpos(1,2)^2 )^.5;
+phi=atand(coilpos(1,1)/coilpos(1,2)) ;
+
+Umines=zeros(60000,2);%pre allocation
 U=1;% upper mine index
-Dmines=zeros(1000,2);%pre allocation
+Dmines=zeros(60000,2);%pre allocation
 D=1;%down mine index
+
 encoderratio=1; %value vor tuning the reading sent by encoder
 
 %% plot variables and functions 
 % RESPONSIBLE FOR THE DOMAIN OF PLOT
 % the dimension of the map 20m by 20m
 yMax  = 2100;                 %y Maximum Value (cm)
-yMin  = -100;                %y minimum Value (cm)
-min = -100;                         % set x-min (cm)
+yMin  = -300;                %y minimum Value (cm)
+min = -300;                         % set x-min (cm)
 max = 2100;                      % set x-max (cm)
+
 
 plotTitle = 'Mine sweeper map';  % plot title
 xLabel = 'X axis';     % x-axis label
@@ -51,7 +56,7 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
      recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
      
    
-     yangle=str2double(recieved(1:3));%changing the values every loop
+     yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
      zangle=str2double(recieved(4:6));
      encoder=str2double(recieved(7:9));
      minestate=str2double(recieved(10));
@@ -64,38 +69,37 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 % some values (like encoder) may need pre processing
 %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
 
- robpos(1,1)=robpos(1,1)+ cosd(zangle)*encoder* sind(yangle)*encoderratio;
- robpos(1,2)=robpos(1,2)+ cosd(zangle)*encoder *cosd(yangle)*encoderratio;
-
-%--------all the next code needs modification because you didn't consider the orientation of the robot /(took into consedration) 
+robpos(1,1)=robpos(1,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
+robpos(1,2)=robpos(1,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+ 
 switch minestate
     
         case 1 % the mine is up and on the right
             
-            Umines(U,1) = robpos(1,1) + coilpos(1,1)*cos(yangle);
-            Umines(U,2) = robpos(1,2) + coilpos(1,2)*sin(yangle);
+            Umines(U,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
+            Umines(U,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
             U=U+1;
             
       % break;
         
         case 2 %  the mine is up and on the left
             
-            Umines(U,1) = robpos(1,1) - coilpos(1,1)*cos(yangle);
-            Umines(U,2) = robpos(1,2) - coilpos(1,2)*sin(yangle);
+            Umines(U,1) = robpos(1,1) - coilpos(1,1)*sind(yangle);
+            Umines(U,2) = robpos(1,2) - coilpos(1,2)*cosd(yangle);
             U=U+1;
       %  break;
         
         case 3 % the mine is down and on the right
             
-             Dmines(U,1) = robpos(1,1) + coilpos(1,1)*cos(yangle);
-             Dmines(U,2) = robpos(1,2) + coilpos(1,2)*sin(yangle);
+             Dmines(U,1) = robpos(1,1) + coilpos(1,1)*sind(yangle);
+             Dmines(U,2) = robpos(1,2) + coilpos(1,2)*cosd(yangle);
              D=D+1;
       % break;
         
         case 4 % the mine is down and on the left
             
-             Dmines(U,1) = robpos(1,1) - coilpos(1,1)*cos(yangle);
-             Dmines(U,2) = robpos(1,2) - coilpos(1,2)*sin(yangle);
+             Dmines(U,1) = robpos(1,1) - coilpos(1,1)*sind(yangle);
+             Dmines(U,2) = robpos(1,2) - coilpos(1,2)*cosd(yangle);
              D=D+1;   
       % break;
 end
