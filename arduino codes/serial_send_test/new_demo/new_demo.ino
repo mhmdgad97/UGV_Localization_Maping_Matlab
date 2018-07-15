@@ -9,13 +9,13 @@ void loop()
  //go straight
   for(int i=0;i<5;i++)
   {
-      Serial.println("0000001008");
+      Serial.println("000000-108");
       delay(750);
   }  
       
   for(int i=0;i<5;i++)
   {
-      Serial.println("1200001008");
+      Serial.println("1200008");
       delay(750);
   }  
       
