@@ -9,25 +9,25 @@ void loop()
  //go straight
   for(int i=0;i<5;i++)
   {
-      Serial.println("0000001007");
+      Serial.println("0000001008");
       delay(750);
   }  
       
   for(int i=0;i<5;i++)
   {
-      Serial.println("0900001007");
+      Serial.println("1200001008");
       delay(750);
   }  
       
   for(int i=0;i<5;i++)
   {
-      Serial.println("1800001007");
+      Serial.println("1800001008");
       delay(750);
   }  
   
   for(int i=0;i<5;i++)
   {
-      Serial.println("2700001007");
+      Serial.println("0200001008");
       delay(750);
   }  
  

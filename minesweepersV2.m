@@ -11,11 +11,11 @@ fopen(s);
 coilpos=[50 50];%the absolute postion of the coil relative to the centre of the robot
 robpos=[0 0];% robot inetial postion
 
-% face=[0 20];
-% facedist = 20;
+ face=[0 50];
+ facedist = 50;
 
 L = (coilpos(1,1)^2 + coilpos(1,2)^2 )^.5;
-phi=atand(coilpos(1,1)/coilpos(1,2)) ;
+phi=-atand(coilpos(1,1)/coilpos(1,2)) ;
 
 Umines=zeros(60000,2);%pre allocation
 U=1;% upper mine index
@@ -44,7 +44,7 @@ legend2 = 'Upper Mine';
 legend3 = 'Under mine';
 robot=plot(rob(:,1),rob(:,2),'-' );
 hold on;
-% facepoint = scatter(face(1,1),face(1,2),'^b');% to know where exactly the robot is facing
+facepoint = scatter(face(1,1),face(1,2),'^b');% to know where exactly the robot is facing
 uppermines = scatter(Umines(:,1),Umines(:,2),'og');
 lowermines = scatter(Dmines(:,1),Dmines(:,2),'+r' );
 % robot=scatter(rob(:,1),rob(:,2),'ob' );
@@ -80,8 +80,9 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
     robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
     robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
     robi=robi+1;
-%     face(1,1)= robpos(robi,1)+ facedist*cosd(yangle);
-%     face(1,2)= robpos(robi,1)+ facedist*sind(yangle);
+    
+    face(1,1)= 2*robpos(robi,1) - robpos(robi-1,1);
+    face(1,2)= 2*robpos(robi,2) - robpos(robi-1,2);
     
     switch minestate
         case 0 % no mines at all
@@ -170,8 +171,9 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
     set(uppermines,'XData',Umines(:,1),'YData',Umines(:,2));
     set(lowermines,'XData',Dmines(:,1),'YData',Dmines(:,2));
     set(robot,'XData',robpos(:,1),'YData',robpos(:,2));
+     set(facepoint,'XData',face(1,1),'YData',face(1,2));
     drawnow limitrate
-    %   set(facepoint,'XData',face(1,1),'YData',face(1,2));
+   
     %refreshdata(uppermines);
     %refreshdata(lowermines);
     
