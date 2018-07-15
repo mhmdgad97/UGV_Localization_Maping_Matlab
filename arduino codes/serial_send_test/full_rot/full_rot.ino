@@ -9,26 +9,40 @@ void loop() {
  
 
 //turn right and go straigt
-   Serial.println("0360000001");
+   Serial.println("0200000002");
   delay(1000); 
-   Serial.println("0720000001");
+   Serial.println("0400000002");
   delay(1000); 
-   Serial.println("1080000001");
+   Serial.println("0600000002");
   delay(1000); 
-   Serial.println("1440000001");
+   Serial.println("0800000002");
   delay(1000); 
-   Serial.println("1800000001");
+   Serial.println("1000000002");
   delay(1000); 
-   Serial.println("2160000001");
+   Serial.println("1200000002");
   delay(1000); 
-   Serial.println("2520000001");
+   Serial.println("1400000002");
   delay(1000); 
-   Serial.println("2880000001");
+   Serial.println("1600000002");
   delay(1000); 
-   Serial.println("3240000001");
+   Serial.println("1800000002");
   delay(1000); 
-   Serial.println("3600000001");
+   Serial.println("2000000002");
   delay(1000); 
-  
-    
+  Serial.println("2200000002");
+  delay(1000); 
+  Serial.println("2400000002");
+  delay(1000); 
+  Serial.println("2600000002");
+  delay(1000); 
+  Serial.println("2800000002");
+  delay(1000); 
+  Serial.println("3000000002");
+  delay(1000); 
+  Serial.println("3200000002");
+  delay(1000); 
+  Serial.println("3400000002");
+  delay(1000); 
+  Serial.println("3600000002");
+  delay(1000);   
   }
