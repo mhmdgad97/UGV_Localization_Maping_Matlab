@@ -8,8 +8,11 @@ set(s,'BaudRate',9600); % to be known from arduino
 fopen(s);
 %%
 %postion defined variables(get more specific info from 3agmy)
-coilpos=[50 10];%the absolute postion of the coil relative to the centre of the robot
+coilpos=[50 50];%the absolute postion of the coil relative to the centre of the robot
 robpos=[0 0];% robot inetial postion
+
+% face=[0 20];
+% facedist = 20;
 
 L = (coilpos(1,1)^2 + coilpos(1,2)^2 )^.5;
 phi=atand(coilpos(1,1)/coilpos(1,2)) ;
@@ -18,6 +21,9 @@ Umines=zeros(60000,2);%pre allocation
 U=1;% upper mine index
 Dmines=zeros(60000,2);%pre allocation
 D=1;%down mine index
+
+rob=zeros(100000,2);%pre allocation
+robi=1;%down mine index
 
 encoderratio=1; %value vor tuning the reading sent by encoder
 
@@ -36,12 +42,14 @@ yLabel = 'Y axis';      % y-axis label
 legend1 = 'Robot';
 legend2 = 'Upper Mine';
 legend3 = 'Under mine';
-
-
-robot = plot(robpos(1,1),robpos(1,2),'o');  % every AnalogRead needs to be on its own Plotgraph
+robot=plot(rob(:,1),rob(:,2),'-' );
 hold on;
+% facepoint = scatter(face(1,1),face(1,2),'^b');% to know where exactly the robot is facing
 uppermines = scatter(Umines(:,1),Umines(:,2),'og');
-lowermines = scatter(Dmines(:,1),Dmines(:,2),'+b' );
+lowermines = scatter(Dmines(:,1),Dmines(:,2),'+r' );
+% robot=scatter(rob(:,1),rob(:,2),'ob' );
+
+
 
 title(plotTitle,'FontSize',15);
 xlabel(xLabel,'FontSize',15);
@@ -69,43 +77,46 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
     % some values (like encoder) may need pre processing
     %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
     
-    robpos(1,1)=robpos(1,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
-    robpos(1,2)=robpos(1,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+    robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
+    robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+    robi=robi+1;
+%     face(1,1)= robpos(robi,1)+ facedist*cosd(yangle);
+%     face(1,2)= robpos(robi,1)+ facedist*sind(yangle);
     
     switch minestate
         case 0 % no mines at all
             
         case 1 % the mine is down and on the left
             
-            Dmines(D,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             D=D+1;
             
             % break;
             
         case 2 %  the mine is up and on the left
             
-            Umines(U,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             U=U+1;
             %  break;
             
         case 3 % the mine is down and on the right
             
-            Dmines(D,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             D=D+1;
             
             % break;
             
         case 4 %  two mines down
             
-            Dmines(D,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             D=D+1;
             
-            Dmines(D,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             D=D+1;
             
             
@@ -113,67 +124,57 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
             
              case 5 %  upper mine left and under mine right
             
-            Dmines(D,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             D=D+1;
             
-            Umines(U,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             U=U+1;
             
             %  break;
             
         case 6 % the mine is up and on the right
             
-            Umines(U,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             U=U+1;
             
             % break;
             
         case 7 %  upper mine right and under mine left
             
-            Umines(U,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             U=U+1;
             
-            Dmines(D,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Dmines(D,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Dmines(D,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Dmines(D,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             D=D+1;
             
             %  break;
             
         case 8 % two mines up
             
-            Umines(U,1) = robpos(1,1) - L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) + L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) - L * cosd( 90 - phi - yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi - yangle );
             U=U+1;
             
-            Umines(U,1) = robpos(1,1) + L * cosd( 90 - phi + yangle );
-            Umines(U,2) = robpos(1,2) - L * sind( 90 - phi + yangle );
+            Umines(U,1) = robpos(robi,1) + L * cosd( 90 - phi + yangle );
+            Umines(U,2) = robpos(robi,2) - L * sind( 90 - phi + yangle );
             U=U+1;
             %  break;
     end
     %--------------------------------------------------------------
-    set(robot,'XData',robpos(1,1),'YData',robpos(1,2));
-    %refreshdata(uppermines);
-    %refreshdata(lowermines);
+    
     set(uppermines,'XData',Umines(:,1),'YData',Umines(:,2));
     set(lowermines,'XData',Dmines(:,1),'YData',Dmines(:,2));
+    set(robot,'XData',robpos(:,1),'YData',robpos(:,2));
     drawnow limitrate
-    %% considered
-    %then after you loop once all the data is bye bye overwritten by
-    %the new data. you didn't save mines posetions you only plot them
-    %and overwite the data on the same variable (Dmines(U,1))
-    %this can works with the robotposetion because we don't need to save it
-    %but the mine case is different. we need to save them all in a materix
-    %as we discussed earlier this matrix is to be declared and
-    %inatialized with zeros at the beginning.
-    % try to declare all your variables at the beginning of the code
-    %%
-    %Update the graph
-    %pause(delay); %no need for this in our code we have enough
-    %waiting inside the code
+    %   set(facepoint,'XData',face(1,1),'YData',face(1,2));
+    %refreshdata(uppermines);
+    %refreshdata(lowermines);
+    
 end
 delete(s);
 disp('Plot Closed and arduino object has been deleted');
