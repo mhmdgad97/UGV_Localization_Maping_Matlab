@@ -7,14 +7,17 @@ s = serial(SerialPort);
 set(s,'BaudRate',9600); % to be known from arduino
 fopen(s);
 %%
-%postion defined variables(get more specific info from 3agmy)
+
 coilpos=[50 50];%the absolute postion of the coil relative to the centre of the robot
 robpos=[0 0];% robot inetial postion
+yangle=0;
 
  face=[0 50];
  facedist = 50;
 
-L = (coilpos(1,1)^2 + coilpos(1,2)^2 )^.5;
+ wheeldist=1000;%distance between wheels
+ 
+L = (coilpos(1,1)^2 + coilpos(1,2)^2 )^.5;%absolute distance between the centre of the robot and the coils
 phi=-atand(coilpos(1,1)/coilpos(1,2)) ;
 
 Umines=zeros(60000,2);%pre allocation
@@ -42,6 +45,8 @@ yLabel = 'Y axis';      % y-axis label
 legend1 = 'Robot';
 legend2 = 'Upper Mine';
 legend3 = 'Under mine';
+legend4 = 'robots orientation';
+
 robot=plot(rob(:,1),rob(:,2),'-' );
 hold on;
 facepoint = scatter(face(1,1),face(1,2),'^b');% to know where exactly the robot is facing
@@ -63,25 +68,32 @@ drawnow
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
     recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
     
+    %     
+%     yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
+%     zangle=str2double(recieved(4:6));
+%     encoder=str2double(recieved(7:9));
+%     minestate=str2double(recieved(10));
+   
     
-    yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
-    zangle=str2double(recieved(4:6));
-    encoder=str2double(recieved(7:9));
+    L_encoder=str2double(recieved(1:3));%left encoder reading
+    R_encoder=str2double(recieved(7:9));%right encoder reading
     minestate=str2double(recieved(10));
+    zangle=str2double(recieved(4:6));
     
-    %This is the magic code
-    %Using plot will slow down the sampling time.. At times to over 20
-    %seconds per sample!
+    yangle=yangle+(R_encoder-L_encoder)/wheeldist;
+    Dc= (L_encoder+R_encoder)/2;
     %-----------------------------------------------------------------------------------------
-    %to-do  the logic that will make sence of the data
-    % some values (like encoder) may need pre processing
-    %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
     
-    robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
-    robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+    robpos(robi+1,1)=robpos(robi,1)+ Dc * sind(yangle)*encoderratio * cosd(zangle);
+    robpos(robi+1,2)=robpos(robi,2)+ Dc * cosd(yangle)*encoderratio * cosd(zangle);
     robi=robi+1;
     
-    face(1,1)= 2*robpos(robi,1) - robpos(robi-1,1);
+   
+%     robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
+%     robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+%     robi=robi+1;
+     
+    face(1,1)= 2*robpos(robi,1) - robpos(robi-1,1);%defines the orietation of the robot
     face(1,2)= 2*robpos(robi,2) - robpos(robi-1,2);
     
     switch minestate
@@ -171,7 +183,7 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
     set(uppermines,'XData',Umines(:,1),'YData',Umines(:,2));
     set(lowermines,'XData',Dmines(:,1),'YData',Dmines(:,2));
     set(robot,'XData',robpos(:,1),'YData',robpos(:,2));
-     set(facepoint,'XData',face(1,1),'YData',face(1,2));
+    set(facepoint,'XData',face(1,1),'YData',face(1,2));
     drawnow limitrate
    
     %refreshdata(uppermines);
