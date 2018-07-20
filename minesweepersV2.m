@@ -192,4 +192,3 @@ while ishandle(robot)%need to check if it works and faster than traditional(what
 end
 delete(s);
 disp('Plot Closed and arduino object has been deleted');
-
