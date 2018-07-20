@@ -42,6 +42,7 @@ yLabel = 'Y axis';      % y-axis label
 legend1 = 'Robot';
 legend2 = 'Upper Mine';
 legend3 = 'Under mine';
+legend4 = 'orientation';
 robot=plot(rob(:,1),rob(:,2),'-' );
 hold on;
 facepoint = scatter(face(1,1),face(1,2),'^b');% to know where exactly the robot is facing
