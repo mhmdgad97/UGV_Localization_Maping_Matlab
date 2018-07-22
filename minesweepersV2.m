@@ -182,3 +182,21 @@ end
 delete(s);
 disp('Plot Closed and arduino object has been deleted');
 
+%% final map
+%this code floors all the dots position and put it in the down left node of
+%each square 
+
+
+Uminesquare=zeros(20,20);
+Dminesquare=zeros(20,20);
+
+for i=0:6000
+Umines(i,1)=floor(Umines(i,1));
+Umines(i,2)=floor(Umines(i,2));
+Dmines(i,1)=floor(Dmines(i,1));
+Dmines(i,2)=floor(Dmines(i,2));
+
+
+    Uminesquare(Umines(i,1),Umines(i,2))=Uminesquare(Umines(i,1),Umines(i,2))+1;
+    Dminesquare(Dmines(i,1),Dmines(i,2))=Dminesquare(Dmines(i,1),Dmines(i,2))+1;
+end
