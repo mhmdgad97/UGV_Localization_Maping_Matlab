@@ -10,52 +10,52 @@ void loop() {
  //go straight  
 
 //turn right and go straigt
-/*
-   Serial.println("0200000000");
-  delay(1000); 
-   Serial.println("0400000000");
-  delay(1000); 
-   Serial.println("0600000000");
-  delay(1000); 
-   Serial.println("0800000000");
-  delay(1000); 
-   Serial.println("1000000000");
-  delay(1000); 
-   Serial.println("1200000000");
-  delay(1000); 
-   Serial.println("1400000000");
-  delay(1000); 
-   Serial.println("1600000000");
-  delay(1000); 
-   Serial.println("1800000000");
-  delay(1000); 
-   Serial.println("2000000000");
-  delay(1000); 
-   Serial.println("2200000000");
-  delay(1000); 
-   Serial.println("2400000000");
-  delay(1000); 
-   Serial.println("2600000000");
-  delay(1000); 
-   Serial.println("2800000000");
-  delay(1000); 
-   Serial.println("3000000000");
-  delay(1000); 
-   Serial.println("3200000000");
-  delay(1000); 
-   Serial.println("3400000000");
-  delay(1000); 
-   Serial.println("3600000000");
-  delay(1000);
-  */
 
-   Serial.println("0900000000");
+   Serial.println("020000000000");
   delay(1000); 
-   Serial.println("1800000000");
+   Serial.println("040000000000");
   delay(1000); 
-   Serial.println("2700000000");
+   Serial.println("060000000000");
   delay(1000); 
-   Serial.println("3600000000");
+   Serial.println("080000000000");
   delay(1000); 
-     
+   Serial.println("100000000000");
+  delay(1000); 
+   Serial.println("120000000000");
+  delay(1000); 
+   Serial.println("140000000000");
+  delay(1000); 
+   Serial.println("160000000000");
+  delay(1000); 
+   Serial.println("180000000000");
+  delay(1000); 
+   Serial.println("200000000000");
+  delay(1000); 
+   Serial.println("220000000000");
+  delay(1000); 
+   Serial.println("240000000000");
+  delay(1000); 
+   Serial.println("260000000000");
+  delay(1000); 
+   Serial.println("280000000000");
+  delay(1000); 
+   Serial.println("300000000000");
+  delay(1000); 
+   Serial.println("320000000000");
+  delay(1000); 
+   Serial.println("340000000000");
+  delay(1000); 
+   Serial.println("360000000000");
+  delay(1000);
+  
+/*
+   Serial.println("090000000000");
+  delay(1000); 
+   Serial.println("180000000000");
+  delay(1000); 
+   Serial.println("270000000000");
+  delay(1000); 
+   Serial.println("360000000000");
+  delay(1000); 
+  */   
   }

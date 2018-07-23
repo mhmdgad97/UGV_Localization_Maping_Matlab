@@ -8,22 +8,22 @@ void loop()
 {
  for (int i=0;i<10;i++)
  {
-      Serial.println("0000000501");
+      Serial.println("000000005010");
       delay(500);
  }
  for (int i=0;i<10;i++)
  {
-      Serial.println("0900000501");
+      Serial.println("090000005010");
       delay(500);
  }
  for (int i=0;i<10;i++)
  {
-      Serial.println("090000-501");
+      Serial.println("090000-05010");
       delay(500);
  }
  for (int i=0;i<10;i++)
  {
-      Serial.println("000000-501");
+      Serial.println("000000-05010");
       delay(500);
  }
 }

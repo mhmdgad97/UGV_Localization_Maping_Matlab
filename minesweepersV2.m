@@ -61,14 +61,23 @@ grid('on');
 
 drawnow
 %%
+
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
-    recieved=fscanf(s,'%s'); %%need to make sure that (%s) works correctly
-    
+%     recieved=zeros(1,15);
+%     terminate=0;
+%     i=1;
+%     while (terminate~='f')
+%             terminate=fscanf(s,'%s');
+%             recieved(i)=terminate;
+%             i=i+1;
+%     end
+%     
+    recieved=fscanf(s,'%s'); %alternative
     
     yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
     zangle=str2double(recieved(4:6));
-    encoder=str2double(recieved(7:9));
-    minestate=str2double(recieved(10));
+    encoder=str2double(recieved(7:10));
+    minestate=str2double(recieved(11));
     
     %This is the magic code
     %Using plot will slow down the sampling time.. At times to over 20
@@ -184,19 +193,19 @@ disp('Plot Closed and arduino object has been deleted');
 
 %% final map
 %this code floors all the dots position and put it in the down left node of
-%each square 
-
-
-Uminesquare=zeros(20,20);
-Dminesquare=zeros(20,20);
-
-for i=0:6000
-Umines(i,1)=floor(Umines(i,1));
-Umines(i,2)=floor(Umines(i,2));
-Dmines(i,1)=floor(Dmines(i,1));
-Dmines(i,2)=floor(Dmines(i,2));
-
-
-    Uminesquare(Umines(i,1),Umines(i,2))=Uminesquare(Umines(i,1),Umines(i,2))+1;
-    Dminesquare(Dmines(i,1),Dmines(i,2))=Dminesquare(Dmines(i,1),Dmines(i,2))+1;
-end
+% %each square 
+% 
+% 
+% Uminesquare=zeros(20,20);
+% Dminesquare=zeros(20,20);
+% 
+% for i=0:6000
+% Umines(i,1)=floor(Umines(i,1)/100);
+% Umines(i,2)=floor(Umines(i,2)/100);
+% Dmines(i,1)=floor(Dmines(i,1)/100);
+% Dmines(i,2)=floor(Dmines(i,2)/100);
+% 
+% 
+%     Uminesquare(Umines(i,1),Umines(i,2))=Uminesquare(Umines(i,1),Umines(i,2))+1;
+%     Dminesquare(Dmines(i,1),Dmines(i,2))=Dminesquare(Dmines(i,1),Dmines(i,2))+1;
+% end
