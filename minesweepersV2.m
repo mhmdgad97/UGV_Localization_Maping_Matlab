@@ -63,17 +63,20 @@ drawnow
 %%
 
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
-%     recieved=zeros(1,15);
-%     terminate=0;
+        
+%     terminate='0';
 %     i=1;
-%     while (terminate~='f')
-%             terminate=fscanf(s,'%s');
-%             recieved(i)=terminate;
-%             i=i+1;
-%     end
-%     
-    recieved=fscanf(s,'%s'); %alternative
-    
+% %     
+% %     while (terminate~='F')
+% %             terminate=fscanf(s,'%s');
+% %             recieved(i)=terminate;
+% %             i=i+1;
+% %     end
+% %     
+recieved=zeros(1,12);
+for i=1:12
+     recieved(i)=fscanf(s,'%s'); %alternative
+end
     yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
     zangle=str2double(recieved(4:6));
     encoder=str2double(recieved(7:10));
