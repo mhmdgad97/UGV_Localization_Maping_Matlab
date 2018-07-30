@@ -2,9 +2,9 @@ clear all
 clc
 
 %User Defined Properties
-SerialPort='com8'; %serial port
+SerialPort='com10'; %serial port
 s = serial(SerialPort);
-set(s,'BaudRate',9600); % to be known from arduino
+set(s,'BaudRate',115200); % to be known from arduino
 fopen(s);
 %%
 %postion defined variables(get more specific info from 3agmy)
@@ -64,34 +64,20 @@ drawnow
 
 while ishandle(robot)%need to check if it works and faster than traditional(what if the robot got out by mistake !!!!!)
         
-%     terminate='0';
-%     i=1;
-% %     
-% %     while (terminate~='F')
-% %             terminate=fscanf(s,'%s');
-% %             recieved(i)=terminate;
-% %             i=i+1;
-% %     end
-% %     
-recieved=zeros(1,12);
-for i=1:12
-     recieved(i)=fscanf(s,'%s'); %alternative
-end
-    yangle=str2double(recieved(1:3));%the angle is between the y axis and the robot front direction
-    zangle=str2double(recieved(4:6));
-    encoder=str2double(recieved(7:10));
-    minestate=str2double(recieved(11));
+    recieved=fscanf(s); 
+    yangle=str2double(recieved(5:7));%the angle is between the y axis and the robot front direction
+    sign=str2double(recieved(1));
+    encoder=str2double(recieved(2:4))*((-1)^sign);
+    minestate=str2double(recieved(8));
     
-    %This is the magic code
-    %Using plot will slow down the sampling time.. At times to over 20
-    %seconds per sample!
+    %zangle=str2double(recieved(4:6));
+    
+    
     %-----------------------------------------------------------------------------------------
-    %to-do  the logic that will make sence of the data
-    % some values (like encoder) may need pre processing
-    %plese declare the robot posetion as a vector (ex:robpos[2 1])/done
+   
     
-    robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio * cosd(zangle);
-    robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio * cosd(zangle);
+    robpos(robi+1,1)=robpos(robi,1)+ encoder * sind(yangle)*encoderratio ;%* cosd(zangle);
+    robpos(robi+1,2)=robpos(robi,2)+ encoder * cosd(yangle)*encoderratio ;%* cosd(zangle);
     robi=robi+1;
     
     face(1,1)= 2*robpos(robi,1) - robpos(robi-1,1);
@@ -184,7 +170,7 @@ end
     set(uppermines,'XData',Umines(:,1),'YData',Umines(:,2));
     set(lowermines,'XData',Dmines(:,1),'YData',Dmines(:,2));
     set(robot,'XData',robpos(:,1),'YData',robpos(:,2));
-     set(facepoint,'XData',face(1,1),'YData',face(1,2));
+    set(facepoint,'XData',face(1,1),'YData',face(1,2));
     drawnow limitrate
    
     %refreshdata(uppermines);
@@ -192,23 +178,44 @@ end
     
 end
 delete(s);
+fclose(instrfind);
+delete(instrfind);
 disp('Plot Closed and arduino object has been deleted');
 
 %% final map
-%this code floors all the dots position and put it in the down left node of
-% %each square 
-% 
-% 
-% Uminesquare=zeros(20,20);
-% Dminesquare=zeros(20,20);
-% 
-% for i=0:6000
-% Umines(i,1)=floor(Umines(i,1)/100);
-% Umines(i,2)=floor(Umines(i,2)/100);
-% Dmines(i,1)=floor(Dmines(i,1)/100);
-% Dmines(i,2)=floor(Dmines(i,2)/100);
-% 
-% 
-%     Uminesquare(Umines(i,1),Umines(i,2))=Uminesquare(Umines(i,1),Umines(i,2))+1;
-%     Dminesquare(Dmines(i,1),Dmines(i,2))=Dminesquare(Dmines(i,1),Dmines(i,2))+1;
-% end
+this code floors all the dots position and put it in the down left node of
+%each square 
+
+Uminesquare=zeros(20,20);
+Dminesquare=zeros(20,20);
+
+for i=0:6000
+Umines(i,1)=floor(Umines(i,1)/100);
+Umines(i,2)=floor(Umines(i,2)/100);
+Dmines(i,1)=floor(Dmines(i,1)/100);
+Dmines(i,2)=floor(Dmines(i,2)/100);
+
+
+Uminesquare(Umines(i,1),Umines(i,2))=Uminesquare(Umines(i,1),Umines(i,2))+1;
+Dminesquare(Dmines(i,1),Dmines(i,2))=Dminesquare(Dmines(i,1),Dmines(i,2))+1;
+end
+
+%% filtering and drwing map
+finalarr=zeros(20,20);
+Dgood=50;%%to be determined by testing
+Ugood=50;%%to be determined by testing
+for i=1:20
+    for j=1:20
+        if Dminesquare(i,j)>Dgood
+            finalarr(i,j)= 1;
+        end
+        
+        if Uminesquare(i,j)>Ugood
+            finalarr(i,j)= 2;
+        end
+    end
+end
+save minearray finalarr;
+grid on
+image (finalarr);
+colorbar

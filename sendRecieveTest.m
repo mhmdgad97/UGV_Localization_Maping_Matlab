@@ -5,7 +5,7 @@ clc
 %User Defined Properties
 SerialPort='com10'; %serial port
 s = serial(SerialPort);
-set(s,'BaudRate',9600); % to be known from arduino
+set(s,'BaudRate',115200); % to be known from arduino
 fopen(s);
 while 1
 a = fscanf(s); 
