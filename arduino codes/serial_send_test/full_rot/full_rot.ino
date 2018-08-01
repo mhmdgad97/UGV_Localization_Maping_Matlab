@@ -1,6 +1,6 @@
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
      
 delay(5000);
 }
@@ -11,51 +11,42 @@ void loop() {
 
 //turn right and go straigt
 
-   Serial.println("020000000000");
-  delay(1000); 
-   Serial.println("040000000000");
-  delay(1000); 
-   Serial.println("060000000000");
-  delay(1000); 
-   Serial.println("080000000000");
-  delay(1000); 
-   Serial.println("100000000000");
-  delay(1000); 
-   Serial.println("120000000000");
-  delay(1000); 
-   Serial.println("140000000000");
-  delay(1000); 
-   Serial.println("160000000000");
-  delay(1000); 
-   Serial.println("180000000000");
-  delay(1000); 
-   Serial.println("200000000000");
-  delay(1000); 
-   Serial.println("220000000000");
-  delay(1000); 
-   Serial.println("240000000000");
-  delay(1000); 
-   Serial.println("260000000000");
-  delay(1000); 
-   Serial.println("280000000000");
-  delay(1000); 
-   Serial.println("300000000000");
-  delay(1000); 
-   Serial.println("320000000000");
-  delay(1000); 
-   Serial.println("340000000000");
-  delay(1000); 
-   Serial.println("360000000000");
-  delay(1000);
-  
+   Serial.println("28000007");
+   delay(100); 
+   Serial.println("28000307");
+   delay(100); 
+   Serial.println("28000607");
+   delay(100); 
+   Serial.println("28000907");
+   delay(100); 
+   Serial.println("28001207");
+   delay(100); 
+   Serial.println("28001507");
+   delay(100); 
+   Serial.println("28001807");
+   delay(100); 
+   Serial.println("28002107");
+   delay(100); 
+   Serial.println("28002407");
+   delay(100); 
+   Serial.println("28002707");
+   delay(100); 
+   Serial.println("28003007");
+   delay(100); 
+   Serial.println("28003307");
+   delay(100); 
+   Serial.println("28003607");
+   delay(100); 
+   
+   
 /*
    Serial.println("090000000000");
-  delay(1000); 
+  delay(100); 
    Serial.println("180000000000");
-  delay(1000); 
+  delay(100); 
    Serial.println("270000000000");
-  delay(1000); 
+  delay(100); 
    Serial.println("360000000000");
-  delay(1000); 
+  delay(100); 
   */   
   }
